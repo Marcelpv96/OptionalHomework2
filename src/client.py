@@ -29,28 +29,39 @@ class WeatherClient (object):
         jsondata = json.loads(r.text)
         currentTime = datetime.datetime.now().hour
         for i in xrange(8):
-            print "La predicció per a les " \
-                + str(currentTime + i) + 'h es de: '
-            print jsondata["hourly_forecast"][i]["temp"]["metric"] + "C"
+            try:
+                print "La predicció per a les " \
+                    + str(currentTime + i) + 'h es de: '
+                print jsondata["hourly_forecast"][i]["temp"]["metric"] + "C"
+            except KeyError:
+                print "Tas equivocat en algun parametre key o ciutat."
+                sys.exit(-1)
 
     def astronomy(url):
         r = requests.get(url)
         jsondata = json.loads(r.text)
-        print "Moon in phase: " + jsondata["moon_phase"]["phaseofMoon"]
-        print "percentIlluminated: " +\
-            jsondata["moon_phase"]["percentIlluminated"]
-        print "hemisphere: " + jsondata["moon_phase"]["hemisphere"]
+        try:
+            print "Moon in phase: " + jsondata["moon_phase"]["phaseofMoon"]
+            print "percentIlluminated: " +\
+                jsondata["moon_phase"]["percentIlluminated"]
+            print "hemisphere: " + jsondata["moon_phase"]["hemisphere"]
+        except KeyError:
+            print "Tas inventat la ciutat.."
+            sys.exit(-1)
 
     def conditions(url):
         r = requests.get(url)
         jsondata = json.loads(r.text)
-        print "Latitud :" + \
-            jsondata["current_observation"]["display_location"]["latitude"]
-        print "Longitud :" + \
-            jsondata["current_observation"]["display_location"]["longitude"]
-        print "Elevacio :" + \
-            jsondata["current_observation"]["display_location"]["elevation"] \
-            + "m"
+        try:
+            print "Latitud :" + \
+                jsondata["current_observation"]["display_location"]["latitude"]
+            print "Longitud :" + \
+                jsondata["current_observation"]["display_location"]["longitude"]
+            print "Elevacio :" + \
+                jsondata["current_observation"]["display_location"]["elevation"] + "m"
+        except KeyError:
+            print "Tas inventat la ciutat.."
+            sys.exit(-1)
 
     def main(self, function=astronomy):
         try:

@@ -13,9 +13,20 @@ Simple python application with two parts.
 '''
 from client import WeatherClient
 import optparse
+import sys
 
 api_Key = None
 if __name__ == "__main__":
     parser = optparse.OptionParser()
-    wc = WeatherClient(api_Key, "conditions", "Lleida")
+    parser.add_option('-s', '--service', action='store', default='hourly',
+                      help='Quin servei vols? pots elegir\
+                       entre hourly, astronomy i conditions')
+    parser.add_option('-k', '--key', action='store', help='Api key')
+    parser.add_option('-l', '--location', action='store', default='Balaguer',
+                      help='Quina ciutat vols?')
+    (options, args) = parser.parse_args()
+    if options.key is None:
+        print "com a minim tens de posar la key, -k <API KEY>"
+        sys.exit(-1)
+    wc = WeatherClient(options.key, options.service, options.location)
     wc.main()
